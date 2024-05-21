@@ -39,10 +39,10 @@ if(isset($_POST["nome"]) && isset($_POST["marca"]) && isset($_POST["origem"]) &&
 
         if($id == -1)
         {
-            $stmt = $obj_mysqli->prepare("INSERT INTO `produto` (`nome`, `marca`, `origem`, `unidademedida`) VALUES (?,?,?,?)");
+            $stmt = $obj_mysqli->prepare("INSERT INTO `produto` (`nome_prod`, `marca_prod`, `Origem_prod`, `Unidade_medida`) VALUES (?,?,?,?)");
             $stmt->bind_param("ssss", $nome, $marca, $origem, $unidademedida);
 
-                if(!stmt->execute())
+                if(!$stmt->execute())
                 {
                     $erro = $stmt->error;
                 }
@@ -54,10 +54,10 @@ if(isset($_POST["nome"]) && isset($_POST["marca"]) && isset($_POST["origem"]) &&
             }    
                 elseif(is_numeric($id) && $id >= 1)
                 {
-                    $stmt = $obj_mysqli->prepare("UPDATE `produto` SET `nome`=?, `marca`=?, `origem`=?, `unidademedida`=? WHERE id = ?");
+                    $stmt = $obj_mysqli->prepare("UPDATE `produto` SET `nome_prod`=?, `marca_prod`=?, `Origem_prod`=?, `Unidade_medida`=? WHERE id_prod = ?");
                     $stmt->bind_param('ssssi', $nome, $marca, $origem, $unidademedida, $id);
 
-                    if(!stmt->execute())
+                    if(!$stmt->execute())
                 {
                     $erro = $stmt->error;
                 }
@@ -68,7 +68,7 @@ if(isset($_POST["nome"]) && isset($_POST["marca"]) && isset($_POST["origem"]) &&
                 }
         
             }
-
+            else
             {
                 $erro = "Número inválido";
             }
@@ -80,7 +80,7 @@ elseif(isset($_GET["id"]) && is_numeric($_GET["id"]))
 
     if(isset($_GET["del"]))
     {
-        $stmt = $obj_mysqli->prepare("DELETE FROM `produto` WHERE id = ?");
+        $stmt = $obj_mysqli->prepare("DELETE FROM `produto` WHERE id_prod = ?");
         $stmt->bind_param('i', $id);
         $stmt->execute();
 
@@ -89,12 +89,12 @@ elseif(isset($_GET["id"]) && is_numeric($_GET["id"]))
     }
     else
     {
-        $stmt = $obj_mysqli->prepare("SELECT * FROM `produto` WHERE id = ?");
+        $stmt = $obj_mysqli->prepare("SELECT * FROM `produto` WHERE id_prod = ?");
         $stmt->bind_param('i', $id);
         $stmt->execute();
 
         $result = $stmt->get_result();
-            $aux_query = $result->fetch_assoc();
+        $aux_query = $result->fetch_assoc();
 
         $nome = $aux_query["Nome_prod"];
         $marca = $aux_query["Marca_prod"];
@@ -122,11 +122,15 @@ elseif(isset($_GET["id"]) && is_numeric($_GET["id"]))
     ?>
     <form action="<?=$_SERVER["PHP_SELF"]?>" method="POST">
         <h1>Cadastro de produto</h1>
+        Nome do Produto <br>
         <input type="text" name="nome" placeholder="Nome do produto" value="<?=$nome?>"><br><br>
+        marca <br>
         <input type="text" name="marca" placeholder="Marca do produto" value="<?=$marca?>"><br><br>
+        origem <br>
         <input type="text" name="origem" placeholder="Origem do produto" value="<?=$origem?>"><br><br>
+        unidade de medida <br>
         <input type="text" name="unidademedida" placeholder="Unidade de medida do produto" value="<?=$unidademedida?>">
-        <input type="hidden" value="<?=id?>" name="id">
+        <input type="hidden" value="<?=$id?>" name="id">
         <button type="submit"><?=($id==-1)?"Cadastrar":"Salvar"?></button>
     </form>
     <br>
